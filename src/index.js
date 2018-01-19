@@ -1,4 +1,5 @@
 import { Server } from 'hapi'
+import PetsPlugin from './plugins/pets'
 
 const env = process.env.NODE_ENV || 'development'
 const port = process.env.PORT || 5000
@@ -45,15 +46,21 @@ const defaultPlugins = async (server) => {
         jsonEditor: true,
         documentationPath: '/',
         info: {
-          title: 'Example',
+          title: 'Pets API',
           version: '1.0.0',
-          description: 'An example api',
+          description: 'A Pet API',
         },
       },
     },
   ]
 
   await server.register(plugins)
+}
+
+const customPlugins = async server => {
+  await server.register([
+    { plugin: PetsPlugin}
+  ])
 }
 
 
@@ -75,6 +82,7 @@ export default async () => {
   const server = new Server(options)
 
   await defaultPlugins(server)
+  await customPlugins(server)
   await server.initialize()
 
 
